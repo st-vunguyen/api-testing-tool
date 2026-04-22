@@ -1,0 +1,44 @@
+{
+  "_meta": {
+    "entity": "Credits, Tokens, or Virtual Currencies",
+    "source_schema": "openapi.yaml components/schemas CreateCreditRequest, AdjustBalanceRequest",
+    "endpoints": [
+      "POST /api/v1/projects/{project_id}/virtual-currencies",
+      "PUT /api/v1/projects/{project_id}/virtual-currencies/{code}/product-grants",
+      "POST /api/v1/projects/{project_id}/customers/{customer_id}/virtual-currency-balances"
+    ]
+  },
+  "create": [
+    {
+      "_case": "VC-01 create credits program",
+      "code": "STARTER_CREDITS",
+      "name": "Starter Credits",
+      "description": "Example credit balance used for API quality engineering"
+    }
+  ],
+  "grants": [
+    {
+      "_case": "VC-GRANT-01 grant on purchase",
+      "product_grants": [
+        {
+          "product_id": "{{product_id_monthly}}",
+          "units_on_purchase_renewal": 100
+        }
+      ]
+    }
+  ],
+  "adjustments": [
+    {
+      "_case": "VC-BAL-01 grant balance",
+      "virtual_currency_code": "STARTER_CREDITS",
+      "amount": 50,
+      "action": "grant"
+    },
+    {
+      "_case": "VC-BAL-02 deduct balance",
+      "virtual_currency_code": "STARTER_CREDITS",
+      "amount": 10,
+      "action": "deduct"
+    }
+  ]
+}

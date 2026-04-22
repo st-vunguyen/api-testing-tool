@@ -1,0 +1,21 @@
+{
+  "executionMode": "baseline",
+  "safeToRun": false,
+  "preferredStack": "k6",
+  "supportedStacks": ["k6", "postman-newman", "jmeter"],
+  "targetEnv": "local",
+  "maxDurationMinutes": 15,
+  "maxVus": 5,
+  "maxIterations": 100,
+  "jmeter": {
+    "maxThreads": 20,
+    "maxRampUpSeconds": 120,
+    "generateStandardDashboard": true,
+    "generateExecutiveDashboard": true
+  },
+  "notes": [
+    "Replace placeholder values only after reviewing the real API spec and environment approval.",
+    "Keep destructive flows out of the performance workload unless explicitly approved.",
+    "Use the `jmeter/` subfolder only when a standard JMeter workflow is justified by the performance scope."
+  ]
+}

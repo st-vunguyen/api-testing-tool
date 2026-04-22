@@ -1,0 +1,49 @@
+{
+  "_meta": {
+    "entity": "Checkout Surfaces, Campaign Screens, or Paywalls",
+    "source_schema": "openapi.yaml components/schemas CreateSurfaceRequest, SaveDraftRequest, PublishRequest",
+    "endpoints": [
+      "POST /api/v1/projects/{project_id}/paywalls",
+      "PUT /api/v1/projects/{project_id}/paywalls/{paywall_id}",
+      "POST /api/v1/projects/{project_id}/paywalls/{paywall_id}/save-draft",
+      "POST /api/v1/projects/{project_id}/paywalls/{paywall_id}/publish",
+      "POST /api/v1/projects/{project_id}/paywalls/{paywall_id}/duplicate"
+    ],
+    "note": "Keep this file only if your API has draft/publish surfaces. Otherwise replace with an equivalent publishable entity."
+  },
+  "create": [
+    {
+      "_case": "PW-01 create draft surface",
+      "name": "Starter Checkout Surface"
+    }
+  ],
+  "update": [
+    {
+      "_case": "PW-UPD-01 link offering",
+      "name": "Starter Checkout Surface",
+      "offering_id": "{{offering_id_default}}"
+    }
+  ],
+  "drafts": [
+    {
+      "_case": "PW-DR-01 save first draft",
+      "expected_version": 0,
+      "config": {
+        "headline": "Upgrade to Premium",
+        "cta_label": "Start now"
+      }
+    }
+  ],
+  "publish": [
+    {
+      "_case": "PW-PUB-01 publish latest draft",
+      "expected_draft_version": 1
+    }
+  ],
+  "duplicate": [
+    {
+      "_case": "PW-DUP-01 duplicate surface",
+      "new_name": "Starter Checkout Surface Copy"
+    }
+  ]
+}

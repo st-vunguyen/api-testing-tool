@@ -1,0 +1,42 @@
+{
+  "_meta": {
+    "entity": "Entitlements or Access Policies",
+    "source_schema": "openapi.yaml components/schemas CreateEntitlementRequest, AttachProductsRequest",
+    "endpoints": [
+      "POST /api/v1/projects/{project_id}/entitlements",
+      "POST /api/v1/projects/{project_id}/entitlements/{entitlement_id}/products/attach",
+      "POST /api/v1/projects/{project_id}/entitlements/{entitlement_id}/products/detach",
+      "DELETE /api/v1/projects/{project_id}/entitlements/{entitlement_id}"
+    ]
+  },
+  "create": [
+    {
+      "_case": "ENT-01 create premium access policy",
+      "lookup_key": "premium_access",
+      "display_name": "Premium Access"
+    }
+  ],
+  "attach": [
+    {
+      "_case": "ENT-ATT-01 attach monthly plan",
+      "product_ids": [
+        "{{product_id_monthly}}"
+      ]
+    }
+  ],
+  "detach": [
+    {
+      "_case": "ENT-DET-01 detach monthly plan",
+      "product_ids": [
+        "{{product_id_monthly}}"
+      ]
+    }
+  ],
+  "negative": [
+    {
+      "_case": "ENT-N01 duplicate lookup_key",
+      "lookup_key": "premium_access",
+      "display_name": "Duplicate Policy"
+    }
+  ]
+}

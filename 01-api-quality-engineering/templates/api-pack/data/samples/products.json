@@ -1,0 +1,40 @@
+{
+  "_meta": {
+    "entity": "Products, Plans, or Catalog Items",
+    "source_schema": "openapi.yaml components/schemas CreateProductRequest, UpdateProductRequest",
+    "endpoints": [
+      "POST /api/v1/projects/{project_id}/products",
+      "GET /api/v1/projects/{project_id}/products",
+      "PUT /api/v1/projects/{project_id}/products/{product_id}",
+      "DELETE /api/v1/projects/{project_id}/products/{product_id}"
+    ]
+  },
+  "create": [
+    {
+      "_case": "PROD-01 monthly plan",
+      "product_type": "subscription",
+      "store_identifier": "starter.monthly",
+      "display_name": "Starter Monthly",
+      "duration": "P1M"
+    },
+    {
+      "_case": "PROD-02 annual plan",
+      "product_type": "subscription",
+      "store_identifier": "starter.annual",
+      "display_name": "Starter Annual",
+      "duration": "P1Y"
+    }
+  ],
+  "negative": [
+    {
+      "_case": "PROD-N01 missing product_type",
+      "store_identifier": "missing.type"
+    }
+  ],
+  "update": [
+    {
+      "_case": "PROD-UPD-01 rename product",
+      "display_name": "Starter Monthly v2"
+    }
+  ]
+}

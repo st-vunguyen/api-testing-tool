@@ -1,0 +1,35 @@
+{
+  "_meta": {
+    "entity": "Customer Attributes or Profile Properties",
+    "source_schema": "openapi.yaml components/schemas CreateCustomerAttributeRequest, UpdateCustomerAttributeRequest",
+    "endpoints": [
+      "POST /api/v1/projects/{project_id}/customers/{customer_id}/attributes",
+      "PATCH /api/v1/projects/{project_id}/customers/{customer_id}/attributes/{attribute_id}",
+      "DELETE /api/v1/projects/{project_id}/customers/{customer_id}/attributes/{attribute_id}"
+    ]
+  },
+  "create": [
+    {
+      "_case": "ATTR-01 create lifecycle stage",
+      "name": "lifecycle_stage",
+      "value": "trial"
+    }
+  ],
+  "update": [
+    {
+      "_case": "ATTR-UPD-01 promote to paid",
+      "value": "paid"
+    },
+    {
+      "_case": "ATTR-UPD-02 clear value",
+      "value": null
+    }
+  ],
+  "negative": [
+    {
+      "_case": "ATTR-N01 duplicate name",
+      "name": "lifecycle_stage",
+      "value": "duplicate"
+    }
+  ]
+}

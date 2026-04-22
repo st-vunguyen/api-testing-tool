@@ -1,0 +1,43 @@
+{
+  "info": {
+    "name": "Performance Baseline Collection",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "GET baseline target",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "{{AUTH_HEADER}}",
+            "value": "{{AUTH_TOKEN}}",
+            "disabled": true
+          }
+        ],
+        "url": {
+          "raw": "{{BASE_URL}}{{TARGET_PATH}}",
+          "host": [
+            "{{BASE_URL}}"
+          ],
+          "path": [
+            "{{TARGET_PATH}}"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('status is below 500', function () {",
+              "  pm.expect(pm.response.code).to.be.below(500);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    }
+  ]
+}

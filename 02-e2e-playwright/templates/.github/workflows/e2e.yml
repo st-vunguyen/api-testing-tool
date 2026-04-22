@@ -1,0 +1,144 @@
+# E2E Playwright — GitHub Actions Workflow
+#
+# ┌────────────────────────────────────────────────────────────────────┐
+# │  CI MODE: lean & fast                                              │
+# │  • Reporters: list + json (NO html, NO dashboard)                  │
+# │  • Screenshots: off   Video: off   Trace: off                     │
+# │  • Artifact: only playwright-report/results.json (tiny)            │
+# │  • test-results/ is NOT uploaded (no screenshots/videos to store)  │
+# │                                                                    │
+# │  MANUAL MODE (local developer):                                    │
+# │  • Reporters: list + html + dashboard (auto-open)                  │
+# │  • Screenshots: on   Video: retain-on-failure   Trace: same       │
+# │  • Full visual evidence in dashboard.html                          │
+# └────────────────────────────────────────────────────────────────────┘
+#
+# TODO: Customize the following before use:
+#   - Database service (PostgreSQL example below — adapt to your DB)
+#   - Environment variables in the "Run E2E tests" step
+#   - The `webServer` command in playwright.config.ts must match your dev server
+#   - Trigger branches (main/master)
+
+name: E2E Tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+    types: [opened, reopened, synchronize]
+
+# Cancel in-progress runs for the same branch/PR
+concurrency:
+  group: e2e-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: true
+
+jobs:
+  e2e:
+    name: Playwright E2E
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    # ── Database Service ───────────────────────────────
+    # TODO: Uncomment and adapt for your database
+    # services:
+    #   db:
+    #     image: postgres:16
+    #     env:
+    #       POSTGRES_USER: testuser
+    #       POSTGRES_PASSWORD: testpass
+    #       POSTGRES_DB: app_test
+    #     ports:
+    #       - 5432:5432
+    #     options: >-
+    #       --health-cmd="pg_isready -U testuser"
+    #       --health-interval=10s
+    #       --health-timeout=5s
+    #       --health-retries=5
+
+    steps:
+      # ── 1. Checkout ────────────────────────────────────
+      - uses: actions/checkout@v4
+
+      # ── 2. Setup pnpm ─────────────────────────────────
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      # ── 3. Setup Node.js ──────────────────────────────
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      # ── 4. Install dependencies ───────────────────────
+      - run: pnpm install --frozen-lockfile
+
+      # ── 5. Install Playwright browsers ────────────────
+      - run: pnpm exec playwright install --with-deps chromium
+
+      # ── 6. Build app (if necessary) ───────────────────
+      # TODO: Uncomment if your app needs a build step before testing
+      # - run: pnpm build
+      #   env:
+      #     DATABASE_URL: postgresql://testuser:testpass@localhost:5432/app_test
+
+      # ── 7. Run E2E tests ──────────────────────────────
+      # CI=true triggers lean mode in playwright.config.ts:
+      #   → json reporter only (no html, no dashboard)
+      #   → screenshot: off, video: off, trace: off
+      #   → result: only playwright-report/results.json is generated
+      - name: Run Playwright tests
+        run: pnpm exec playwright test
+        env:
+          CI: true
+          BASE_URL: http://localhost:3000
+          # Database — uncomment if your global-setup uses DB commands
+          # DATABASE_URL: postgresql://testuser:testpass@localhost:5432/app_test
+          ADMIN_EMAIL: admin@example.com
+          ADMIN_PASSWORD: ${{ secrets.E2E_ADMIN_PASSWORD }}
+          USER_A_EMAIL: usera@example.com
+          USER_A_PASSWORD: ${{ secrets.E2E_USER_A_PASSWORD }}
+          USER_B_EMAIL: userb@example.com
+          USER_B_PASSWORD: ${{ secrets.E2E_USER_B_PASSWORD }}
+
+      # ── 8. Upload JSON results ────────────────────────
+      # Only the machine-readable results.json — tiny file, used for PR summary.
+      # No HTML report, no test-results/ (screenshots/videos/traces are OFF in CI).
+      - name: Upload test results (JSON)
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-results
+          path: playwright-report/results.json
+          retention-days: 14
+          if-no-files-found: warn
+
+      # ── 9. Summary — PR comment with test results ─────
+      - name: Add test results to PR summary
+        if: always()
+        run: |
+          if [ -f playwright-report/results.json ]; then
+            TOTAL=$(jq '.stats.expected + .stats.unexpected + .stats.flaky + .stats.skipped' playwright-report/results.json 2>/dev/null || echo "?")
+            PASSED=$(jq '.stats.expected' playwright-report/results.json 2>/dev/null || echo "?")
+            FAILED=$(jq '.stats.unexpected' playwright-report/results.json 2>/dev/null || echo "?")
+            SKIPPED=$(jq '.stats.skipped' playwright-report/results.json 2>/dev/null || echo "?")
+            DURATION=$(jq '.stats.duration' playwright-report/results.json 2>/dev/null || echo "?")
+            DURATION_S=$(echo "scale=1; ${DURATION:-0} / 1000" | bc 2>/dev/null || echo "?")
+
+            echo "## 🎭 E2E Test Results" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "| Metric | Value |" >> $GITHUB_STEP_SUMMARY
+            echo "|--------|-------|" >> $GITHUB_STEP_SUMMARY
+            echo "| Total | ${TOTAL} |" >> $GITHUB_STEP_SUMMARY
+            echo "| ✅ Passed | ${PASSED} |" >> $GITHUB_STEP_SUMMARY
+            echo "| ❌ Failed | ${FAILED} |" >> $GITHUB_STEP_SUMMARY
+            echo "| ⏭ Skipped | ${SKIPPED} |" >> $GITHUB_STEP_SUMMARY
+            echo "| ⏱ Duration | ${DURATION_S}s |" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "> Download the **playwright-results** artifact for the full JSON report." >> $GITHUB_STEP_SUMMARY
+          else
+            echo "## 🎭 E2E Test Results" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "⚠️ No results.json found — tests may not have run." >> $GITHUB_STEP_SUMMARY
+          fi

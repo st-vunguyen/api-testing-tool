@@ -1,0 +1,31 @@
+{
+  "_meta": {
+    "entity": "Customers or End Users",
+    "source_schema": "openapi.yaml components/schemas CreateCustomerRequest, UpdateCustomerRequest",
+    "endpoints": [
+      "POST /api/v1/projects/{project_id}/customers",
+      "GET /api/v1/projects/{project_id}/customers/{customer_id}",
+      "DELETE /api/v1/projects/{project_id}/customers/{customer_id}"
+    ]
+  },
+  "create": [
+    {
+      "_case": "CUST-01 create identified user",
+      "app_user_id": "starter-user-001",
+      "last_seen_country": "US",
+      "last_seen_platform": "ios"
+    },
+    {
+      "_case": "CUST-02 create android user",
+      "app_user_id": "starter-user-002",
+      "last_seen_country": "VN",
+      "last_seen_platform": "android"
+    }
+  ],
+  "negative": [
+    {
+      "_case": "CUST-N01 duplicate app_user_id",
+      "app_user_id": "starter-user-001"
+    }
+  ]
+}

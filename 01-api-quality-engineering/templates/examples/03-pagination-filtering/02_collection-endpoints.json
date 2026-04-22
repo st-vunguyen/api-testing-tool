@@ -1,0 +1,47 @@
+{
+  "source": "openapi.yaml",
+  "patterns": [
+    "page-based",
+    "cursor-based",
+    "offset-based"
+  ],
+  "endpoints": [
+    {
+      "method": "GET",
+      "path": "/workspaces",
+      "pagination": {
+        "type": "page-based",
+        "params": [
+          "page",
+          "page_size"
+        ]
+      },
+      "filters": [
+        "status",
+        "owner_id"
+      ],
+      "sorting": [
+        "created_at",
+        "name"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/audit-logs",
+      "pagination": {
+        "type": "cursor-based",
+        "params": [
+          "cursor",
+          "limit"
+        ]
+      },
+      "filters": [
+        "actor_id",
+        "event_type"
+      ],
+      "sorting": [
+        "timestamp"
+      ]
+    }
+  ]
+}

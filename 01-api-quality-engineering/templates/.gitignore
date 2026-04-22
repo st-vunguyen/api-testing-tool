@@ -1,0 +1,32 @@
+# ════════════════════════════════════════════════════
+# API Quality Engineering — .gitignore
+# Append these entries to your target project's .gitignore
+#
+# Commit docs under `documents/api-quality-engineering/**` and only example env files.
+# Generated raw execution output and real env overrides must stay out of git.
+# `.github/*`, `.claude/*`, and `testing/SKILL.md` are support files and should remain committed.
+# ════════════════════════════════════════════════════
+
+# ── Raw runner outputs ──────────────────────────────
+tools/api-quality-engineering/**/reports/raw/**
+!tools/api-quality-engineering/**/reports/raw/README.md
+!tools/api-quality-engineering/**/reports/raw/**/README.md
+
+# ── Real env overrides ──────────────────────────────
+tools/api-quality-engineering/**/env/.env
+tools/api-quality-engineering/**/env/.env.local
+tools/api-quality-engineering/**/env/.env.*.local
+tools/api-quality-engineering/**/env/.env.runtime
+
+# ── Real Postman environments ───────────────────────
+tools/api-quality-engineering/**/postman/environments/*.postman_environment.json
+!tools/api-quality-engineering/**/postman/environments/*.postman_environment.json.example
+
+# ── Newman / CLI outputs ────────────────────────────
+newman/
+newman-results/
+newman-run/
+
+# ── OS junk ─────────────────────────────────────────
+.DS_Store
+Thumbs.db

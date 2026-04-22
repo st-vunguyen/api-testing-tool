@@ -1,0 +1,39 @@
+name: API Testing Newman
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'tools/api-quality-engineering/**'
+      - 'documents/api-quality-engineering/**'
+      - '.github/workflows/api-testing-newman.yml'
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Newman
+        run: npm install -g newman
+
+      - name: Run smoke pack
+        env:
+          BASE_URL: ${{ secrets.API_BASE_URL }}
+          ACCESS_TOKEN: ${{ secrets.API_ACCESS_TOKEN }}
+        run: |
+          mkdir -p tools/api-quality-engineering/example-api/reports/raw
+          newman run tools/api-quality-engineering/example-api/postman/collection.json             --environment tools/api-quality-engineering/example-api/postman/environments/prod.postman_environment.json.example             --folder "Health & Smoke"             --reporters cli,json,junit             --reporter-json-export tools/api-quality-engineering/example-api/reports/raw/newman-summary.json             --reporter-junit-export tools/api-quality-engineering/example-api/reports/raw/newman-junit.xml
+
+      - name: Upload raw artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: api-testing-newman-raw
+          path: tools/api-quality-engineering/example-api/reports/raw/

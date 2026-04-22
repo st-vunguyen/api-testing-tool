@@ -1,0 +1,66 @@
+{
+  "_meta": {
+    "entity": "Offerings, Bundles, or Packages",
+    "source_schema": "openapi.yaml components/schemas CreateOfferingRequest, UpdateOfferingRequest",
+    "endpoints": [
+      "POST /api/v1/projects/{project_id}/offerings",
+      "GET /api/v1/projects/{project_id}/offerings/{offering_id}",
+      "PUT /api/v1/projects/{project_id}/offerings/{offering_id}",
+      "DELETE /api/v1/projects/{project_id}/offerings/{offering_id}"
+    ]
+  },
+  "create": [
+    {
+      "_case": "OFR-01 default bundle",
+      "identifier": "default",
+      "display_name": "Default Bundle",
+      "is_current": true,
+      "packages": [
+        {
+          "identifier": "monthly",
+          "display_name": "Monthly",
+          "products": [
+            {
+              "product_id": "{{product_id_monthly}}"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "negative": [
+    {
+      "_case": "OFR-N01 duplicate identifier",
+      "identifier": "default",
+      "display_name": "Duplicate Bundle"
+    }
+  ],
+  "update": [
+    {
+      "_case": "OFR-UPD-01 add annual package",
+      "identifier": "default",
+      "display_name": "Default Bundle",
+      "is_current": true,
+      "packages": [
+        {
+          "identifier": "monthly",
+          "display_name": "Monthly",
+          "products": [
+            {
+              "product_id": "{{product_id_monthly}}"
+            }
+          ]
+        },
+        {
+          "identifier": "annual",
+          "display_name": "Annual",
+          "products": [
+            {
+              "product_id": "{{product_id_annual}}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

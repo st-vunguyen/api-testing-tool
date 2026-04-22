@@ -1,0 +1,59 @@
+# ════════════════════════════════════════════════════
+# E2E Playwright — .gitignore
+# Append these entries to your project's .gitignore
+#
+# ⚠️ DISCIPLINE: Only add entries that E2E automation
+#    actually generates. NEVER add app-level entries
+#    (e.g., /public/uploads/, data/, logs/).
+#
+# 📌 COMMITTED artifacts (DO NOT gitignore):
+#    - tests/e2e/**/*.ts-snapshots/   → Visual regression baselines
+#    - tests/e2e/docs/reports/        → Human-curated execution reports (markdown)
+#    - .github/workflows/e2e.yml      → CI workflow definition
+#    - .github/instructions/, .github/prompts/e2e-playwright/, .claude/, testing/SKILL.md
+# ════════════════════════════════════════════════════
+
+# ── Playwright Generated Artifacts ───────────────────
+# Generated every test run — NEVER commit them.
+# CI uploads these as workflow artifacts (with retention policy).
+# Locally they are disposable after you inspect reports.
+test-results/
+playwright-report/
+blob-report/
+playwright/.cache/
+
+# ── Auth State ───────────────────────────────────────
+# storageState JSON files contain session cookies — security risk
+tests/e2e/.auth/
+
+# ── Traces, Videos, Screenshots (auto-generated) ────
+# Retained on failure in test-results/ (covered above).
+# Stray files that land outside test-results/:
+*.webm
+trace.zip
+
+# ── Environment ─────────────────────────────────────
+# .env.test holds real credentials for local runs.
+# .env.test.example is committed as a template.
+.env.test
+.env.test.local
+
+# ── Node / pnpm ─────────────────────────────────────
+node_modules/
+.pnpm-store/
+
+# ── TypeScript build cache ───────────────────────────
+*.tsbuildinfo
+
+# ── Coverage (if istanbul/nyc/v8 is added later) ────
+coverage/
+.nyc_output/
+
+# ── OS & IDE Junk ────────────────────────────────────
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+.idea/
+.vscode/settings.json

@@ -1,0 +1,47 @@
+{
+  "source": "openapi.yaml",
+  "servers": [
+    {
+      "url": "https://api.example.com",
+      "description": "Production"
+    },
+    {
+      "url": "http://localhost:3000",
+      "description": "Local"
+    }
+  ],
+  "securitySchemes": [
+    {
+      "name": "bearerAuth",
+      "type": "http",
+      "scheme": "bearer",
+      "bearerFormat": "JWT"
+    }
+  ],
+  "operations": [
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "tag": "Auth",
+      "authRequired": false
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces",
+      "tag": "Workspaces",
+      "authRequired": true
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/{workspace_id}/members",
+      "tag": "Members",
+      "authRequired": true
+    },
+    {
+      "method": "GET",
+      "path": "/audit-logs",
+      "tag": "Audit Logs",
+      "authRequired": true
+    }
+  ]
+}

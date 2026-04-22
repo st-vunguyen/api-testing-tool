@@ -1,0 +1,45 @@
+{
+  "_meta": {
+    "entity": "Projects or Workspaces",
+    "source_schema": "openapi.yaml components/schemas CreateProjectRequest, UpdateProjectRequest",
+    "endpoints": [
+      "POST /api/v1/projects",
+      "GET /api/v1/projects/{project_id}",
+      "PUT /api/v1/projects/{project_id}",
+      "PATCH /api/v1/projects/{project_id}",
+      "DELETE /api/v1/projects/{project_id}"
+    ]
+  },
+  "create": [
+    {
+      "_case": "PROJ-01 minimal create",
+      "name": "Starter Workspace"
+    },
+    {
+      "_case": "PROJ-02 create with icon",
+      "name": "Growth Workspace",
+      "icon_url": "https://example.com/icons/growth.png"
+    }
+  ],
+  "negative": [
+    {
+      "_case": "PROJ-N01 missing name",
+      "_body": {}
+    }
+  ],
+  "update": {
+    "put": [
+      {
+        "_case": "PROJ-PUT-01 full update",
+        "name": "Starter Workspace Renamed",
+        "icon_url": "https://example.com/icons/renamed.png"
+      }
+    ],
+    "patch": [
+      {
+        "_case": "PROJ-PATCH-01 partial name update",
+        "name": "Starter Workspace Patched"
+      }
+    ]
+  }
+}

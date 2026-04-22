@@ -1,0 +1,44 @@
+{
+  "_meta": {
+    "entity": "Apps or Client Integrations",
+    "source_schema": "openapi.yaml components/schemas CreateAppRequest, UpdateAppRequest",
+    "endpoints": [
+      "POST /api/v1/projects/{project_id}/apps",
+      "GET /api/v1/projects/{project_id}/apps",
+      "PUT /api/v1/projects/{project_id}/apps/{app_id}",
+      "DELETE /api/v1/projects/{project_id}/apps/{app_id}"
+    ],
+    "note": "Example app types are illustrative; align enum values with your API."
+  },
+  "create": [
+    {
+      "_case": "APP-01 ios app",
+      "name": "Starter iOS App",
+      "type": "app_store",
+      "bundle_id": "com.example.starter"
+    },
+    {
+      "_case": "APP-02 android app",
+      "name": "Starter Android App",
+      "type": "play_store",
+      "package_name": "com.example.starter"
+    },
+    {
+      "_case": "APP-03 web integration",
+      "name": "Starter Web App",
+      "type": "web"
+    }
+  ],
+  "negative": [
+    {
+      "_case": "APP-N01 missing type",
+      "name": "Invalid App"
+    }
+  ],
+  "update": [
+    {
+      "_case": "APP-UPD-01 rename app",
+      "name": "Starter iOS App v2"
+    }
+  ]
+}
